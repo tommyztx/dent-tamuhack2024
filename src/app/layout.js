@@ -1,12 +1,11 @@
 import { Inter } from "next/font/google";
 import "./globals.css";
-import dynamic from "next/dynamic";
 
 const inter = Inter({ subsets: ["latin"] });
 
-const ArComponent = dynamic(() => import("./components/ArComponent"), {
-    ssr: false,
-});
+// const ArComponent = dynamic(() => import("./components/ArComponent"), {
+//     ssr: false,
+// });
 
 export const metadata = {
     title: "DENT TAMUHack 2024",
