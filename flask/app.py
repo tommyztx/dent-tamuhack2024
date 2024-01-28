@@ -1,7 +1,7 @@
 from flask import Flask, render_template, jsonify
-import psycopg
+import psycopg2
 from flask_cors import CORS
-from psycopg import sql
+from psycopg2 import sql
 
 app = Flask(__name__)
 CORS(app)
@@ -18,7 +18,7 @@ def stats():
     DB_PORT = ''
     
     # Establish a connection to the PostgreSQL database
-    conn = psycopg.connect(
+    conn = psycopg2.connect(
         dbname=DB_NAME,
         user=DB_USER,
         password=DB_PASSWORD,
@@ -26,7 +26,7 @@ def stats():
         port=DB_PORT
     )
 
-    conn = psycopg.connect(
+    conn = psycopg2.connect(
     dbname=DB_NAME,
     user=DB_USER,
     password=DB_PASSWORD,
