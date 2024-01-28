@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Stats Page</title>
+    <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="stylesheet" href="css/index.css" />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Honk&display=swap" rel="stylesheet">
+        <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+</head>
+
+<body>
+    <div>
+        <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+            <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+                aria-controls="navbarNav" aria-expanded="true" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <div class="navbar-nav">
+                    <a class="nav-item nav-link" href="#home">Home</a>
+                    <a class="nav-item nav-link" href="#challenges">Challenges</a>
+                    <a class="nav-item nav-link" href="#leaderboard">Leaderboard</a>
+                    <a class="nav-item nav-link" href="stats.html">Stats</a>
+                </div>
+            </div>
+        </nav>
+
+         <div id="main" class="container text-center my-5">
+            <h1 class="mb-4 display-4 font-weight-bold">User Stats</h1>
+            <hr />
+            <p class="lead text-info">
+                Hey explorers! Ready for an adventure in Science, Technology, Engineering, and Math (STEM)? Let's dive into a world where magic happens through Augmented Reality (AR)!
+            </p>
+            <p class="lead text-success">
+                Join the AR STEM Adventure Today! Unlock a world full of fun and learning. Who knows, you might be the next great scientist, tech guru, engineer, or math whiz! Ready to explore the magical world of STEM with AR? Let the adventure begin!
+            </p>
+            
+
+    </div>
+    <div id="userStats">
+
+    </div>
+
+    <script>
+        // Assume you have a server-side endpoint that provides user stats in JSON format
+        // You can use JavaScript to fetch data from the server and update the HTML dynamically
+
+        // Example URL for the server-side endpoint
+        const statsEndpoint = 'https://db63x67stg.execute-api.us-east-2.amazonaws.com/new_stage';
+
+        // Fetch data from the server
+        fetch(statsEndpoint)
+            .then(response => response.json())
+            .then(data => {
+                // Update the HTML with user stats
+                document.getElementById('userStats').innerHTML = `
+                    <p>Challenges Completed: ${data.challengesCompleted}</p>
+                    <p>Streak: ${data.streak}</p>
+                    <p>Hours Played: ${data.hoursPlayed}</p>
+                `;
+                // console.log(data.challengesCompleted);
+            })
+            .catch(error => console.error('Error fetching data:', error));
+    </script>
+</body>
+
+</html>
