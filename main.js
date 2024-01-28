@@ -13,7 +13,7 @@ loader.load(
         var bbox = new THREE.Box3().setFromObject(gltf.scene);
         var center = bbox.getCenter(new THREE.Vector3());
         gltf.scene.position.sub(center); // center the model
-        gltf.scene.position.x = -4.5; // Shift the model 2 units to the left
+        // gltf.scene.position.x = -4.5; // Shift the model 2 units to the left
         model = gltf.scene;
         scene.add(gltf.scene);
     },
@@ -24,31 +24,42 @@ loader.load(
 );
 
 var camera = new THREE.PerspectiveCamera(
-    75,
+    60,
     window.innerWidth / window.innerHeight,
     0.1,
     1000
 );
 camera.position.z = 5;
 
-var p = document.querySelector("p");
-var modelContainer = document.createElement("div");
-modelContainer.id = "model-container";
-p.parentNode.insertBefore(modelContainer, p);
+var container = document.getElementById("containedModel");
 
-// var controls = new THREE.OrbitControls(camera, renderer.domElement);
-var renderer = new THREE.WebGLRenderer({ alpha: true });
-var width = window.innerWidth * 0.8; // 80% of the window width
-var height = window.innerHeight * 0.8; // 80% of the window height
-renderer.setSize(width, height);
-renderer.setClearColor(0x000000, 0); // Set clear color to black with 0 opacity
-// document.body.appendChild(renderer.domElement);
-document.getElementById("model-container").appendChild(renderer.domElement);
+var renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+
+renderer.setSize(container.clientWidth, container.clientHeight);
+renderer.setClearColor(0x000000, 0);
+container.appendChild(renderer.domElement);
+// Add ambient light
+var ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
+scene.add(ambientLight);
+
+// Add directional light
+var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
+directionalLight.position.set(0, 1, 0); // set the position of the light
+scene.add(directionalLight);
+window.addEventListener("resize", function () {
+    var width = container.clientWidth;
+    var height = container.clientHeight;
+    renderer.setSize(width, height);
+    camera.aspect = width / height;
+    camera.updateProjectionMatrix();
+});
+window.dispatchEvent(new Event("resize"));
 
 // Add a directional light to the scene
 var light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(1, 1, 1).normalize();
 scene.add(light);
+console.log("hello");
 
 var clock = new THREE.Clock();
 
