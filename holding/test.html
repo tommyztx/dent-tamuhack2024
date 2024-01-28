@@ -22,6 +22,9 @@
         <script src="../threex/threex-artoolkitcontext.js"></script>
         <script src="../threex/threex-arbasecontrols.js"></script>
         <script src="../threex/threex-armarkercontrols.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
         <style>
             .list-group-item {
                 display: flex;
@@ -34,7 +37,7 @@
                 margin-bottom: 5px;
                 padding: 10px;
                 border-radius: 5px;
-                font-family: 'Comic Sans MS', 'Comic Sans', cursive; /* Child-friendly font */
+                font-family: 'Bubblegum Sans', cursive;
             }
 
             .list-group-item .status {
@@ -57,10 +60,21 @@
 
             @media (max-width: 768px) {
                 .list-group-item {
-                    font-size: 14px;
+                    font-size: 11px;
                 }
-                .bottom-bar {
-                    width: 50%; /* Smaller width on larger screens */
+                .info-bubble {
+                    /* make the font way smaller */
+                    font-size: 10px;
+                }
+                .minimize-button {
+                    /* make the button smaller */
+                    padding: 5px;
+                    font-size: 10px;
+                }
+                .info-button {
+                    /* make the button smaller */
+                    padding: 5px;
+                    font-size: 10px;
                 }
             }
 
@@ -110,6 +124,7 @@
                 max-width: 300px;
                 display: none;
                 z-index: 1001;
+                font-family: 'Bubblegum Sans', cursive;
             }
             .info-bubble.show {
                 transform: scale(1);
@@ -131,10 +146,9 @@
         <button id="minimizeButton" class="minimize-button">&horbar;</button>
 
         <!-- Info Button and Text Bubble -->
-        <div id="infoButton" class="info-button">&#9432;</div>
+        <div id="infoButton" class="info-button">ℹ</div>
         <div id="infoBubble" class="info-bubble">
-            <h1>🚀 Let's Go on a Space Adventure! 🌟</h1>
-            <p>👋 Hey there, Space Explorer! Ready to find some cool patterns in the stars? Here's how:</p>
+            <p>👋 Hey there, Space Explorer!</p>
             <ul>
                 <li>🔍 Look for the black squares with letters. They're hiding in the stars!</li>
                 <li>🎉 When you find all the planets, it'll get checked off the list. Find them all to win!</li>
