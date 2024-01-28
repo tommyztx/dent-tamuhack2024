@@ -115,7 +115,7 @@ function initialize()
 	let geometry1 = new THREE.SphereGeometry(1, 32,32);
 	
 	let loader = new THREE.TextureLoader();
-	let texture = loader.load( 'images/earth-sphere.jpg', render );
+	let texture = loader.load( 'images/mercury-sphere.jpg', render );
 	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
 	
 	mesh1 = new THREE.Mesh( geometry1, material1 );
