@@ -177,3 +177,8 @@ p {
     color: #c798c7;
     text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }
+
+.lead {
+    text-shadow: 3px 3px 2px black;
+    font-size: 1.5rem;
+}
