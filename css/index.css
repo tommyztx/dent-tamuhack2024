@@ -25,9 +25,21 @@ h1 {
     position: absolute;
     top: 10px;
     left: 10px;
-    color: white;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 8px;
     border-radius: 8px;
+    width: 300px;
+    word-wrap: break-word;
+}
+
+.overlay-title {
+    color: white;
+    font-size: 1.5em;
+    font-weight: bold;
+    margin-bottom: 10px;
+}
+
+.overlay-description {
+    color: white;
     font-size: 1.2em;
 }
