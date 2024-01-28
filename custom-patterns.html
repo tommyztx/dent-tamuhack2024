@@ -16,7 +16,7 @@
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
 
-<!-- 
+<!--
   Example created by Lee Stemkoski: https://github.com/stemkoski
   Based on the AR.js library and examples created by Jerome Etienne: https://github.com/jeromeetienne/AR.js/
 -->
@@ -36,11 +36,12 @@ animate();
 
 function initialize()
 {
+
 	scene = new THREE.Scene();
 
 	let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.5 );
 	scene.add( ambientLight );
-				
+
 	camera = new THREE.Camera();
 	scene.add(camera);
 
@@ -58,7 +59,7 @@ function initialize()
 	clock = new THREE.Clock();
 	deltaTime = 0;
 	totalTime = 0;
-	
+
 	////////////////////////////////////////////////////////////
 	// setup arToolkitSource
 	////////////////////////////////////////////////////////////
@@ -69,33 +70,33 @@ function initialize()
 
 	function onResize()
 	{
-		arToolkitSource.onResize()	
-		arToolkitSource.copySizeTo(renderer.domElement)	
+		arToolkitSource.onResize()
+		arToolkitSource.copySizeTo(renderer.domElement)
 		if ( arToolkitContext.arController !== null )
 		{
-			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
-		}	
+			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)
+		}
 	}
 
 	arToolkitSource.init(function onReady(){
 		onResize()
 	});
-	
+
 	// handle resize event
 	window.addEventListener('resize', function(){
 		onResize()
 	});
-	
+
 	////////////////////////////////////////////////////////////
 	// setup arToolkitContext
-	////////////////////////////////////////////////////////////	
+	////////////////////////////////////////////////////////////
 
 	// create atToolkitContext
 	arToolkitContext = new THREEx.ArToolkitContext({
 		cameraParametersUrl: 'data/camera_para.dat',
 		detectionMode: 'mono'
 	});
-	
+
 	// copy projection matrix to camera when initialization complete
 	arToolkitContext.init( function onCompleted(){
 		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
@@ -106,8 +107,10 @@ function initialize()
 	////////////////////////////////////////////////////////////
 
 	let loader = new THREE.TextureLoader();
-	let texture = loader.load( 'images/border.png' );
-		
+	let texture = loader.load( 'images/mercury-sphere.jpg', render );
+	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
+
+
 	let patternArray = ["letterA", "letterB", "letterC", "letterD", "letterF", "kanji", "hiro"];
 	let colorArray   = [0xff0000, 0xff8800, 0xffff00, 0x00cc00, 0x0000ff, 0xcc00ff, 0xcccccc];
 	for (let i = 0; i < 7; i++)
@@ -117,10 +120,10 @@ function initialize()
 		let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
 			type : 'pattern', patternUrl : "data/" + patternArray[i] + ".patt",
 		});
-	
-		let mesh = new THREE.Mesh( 
-			new THREE.CubeGeometry(1.25,1.25,1.25), 
-			new THREE.MeshBasicMaterial({color:colorArray[i], map:texture, transparent:true, opacity:0.5}) 
+
+		let mesh = new THREE.Mesh(
+			new THREE.SphereBufferGeometry( 15, 32, 16 ),
+			new THREE.MeshBasicMaterial({color:colorArray[i], map:texture, transparent:true, opacity:0.5})
 		);
 		mesh.position.y = 1.25/2;
 		markerRoot.add( mesh );
