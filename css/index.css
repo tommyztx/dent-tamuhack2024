@@ -12,15 +12,19 @@ body {
     color: #333333;
 }
 
-h1 {
+.homepageTitle,
+.h1 {
     font-family: "Fredoka", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
     font-variation-settings: "wdth" 100;
     opacity: 0;
-    animation: fadeIn 3s ease-out forwards;
+}
+
+.homepageTitle {
     animation-delay: 400ms;
+    animation: fadeIn 3s ease-out forwards;
 }
 
 #main p {
@@ -41,7 +45,7 @@ h1 {
 
 .overlay-title {
     color: white;
-    font-size: 1.3em;
+    font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 10px;
 }
@@ -116,4 +120,10 @@ p {
     opacity: 0;
     animation: fadeIn 5s ease-out forwards;
     animation-delay: 900ms;
+}
+
+@media (max-width: 600px) {
+    .overlay-text {
+        width: 300px; /* Adjust this value to your preference */
+    }
 }
