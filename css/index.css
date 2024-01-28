@@ -10,7 +10,6 @@ body {
     background-position: top left;
     margin: 2% 5% 0% 5%;
     color: #333333;
-    
 }
 
 h1 {
@@ -27,7 +26,7 @@ h1 {
 #main p {
     opacity: 0;
     animation: fadeIn 3s ease-out forwards;
-    animation-delay: 400ms; 
+    animation-delay: 400ms;
 }
 
 .overlay-text {

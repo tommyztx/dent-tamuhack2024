@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <head>
     <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
-    <title>Hello, AR Cubes with Custom Models!</title>
+    <title>Laptop Parts AR</title>
     <!-- include three.js library -->
     <script src='js/three.js'></script>
     <!-- include jsartookit -->
@@ -17,189 +17,224 @@
 </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
+    <div
+        id="checklist"
+        class="position-fixed top-0 start-0 p-3"
+        style="opacity: 0.8"
+    >
+        <ul class="list-group" id="patternList">
+            <!-- Checklist items will be added here dynamically -->
+        </ul>
+    </div>
 
-<!-- 
-  Example created by Lee Stemkoski: https://github.com/stemkoski
-  Based on the AR.js library and examples created by Jerome Etienne: https://github.com/jeromeetienne/AR.js/
--->
+    <!-- Popup for 3D Model -->
+    <div class="modal" tabindex="-1" role="dialog" id="modelPopup">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title">Congratulations!</h5>
+                    <button
+                        type="button"
+                        class="close"
+                        data-dismiss="modal"
+                        aria-label="Close"
+                    >
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>All patterns found! Here is your 3D model:</p>
+                    <!-- 3D Model will be displayed here -->
+                    <!-- <div id="modelContainer"></div> -->
+                    <!-- embed a gif -->
+                    <img
+                        src="https://media1.tenor.com/m/eG9Ro44EyMcAAAAd/our-solar-system-planetary-system.gif"
+                        alt="3D Model"
+                        width="100%"
+                    />
+                    <!-- add a button to reload thats (play again?) -->
+                    <button
+                        type="button"
+                        class="btn btn-primary"
+                        onclick="window.location.reload();"
+                    >
+                        Play Again
+                    </button>
+                    <!-- add button to navigate back to home page -->
+                    <button
+                        type="button"
+                        class="btn btn-secondary"
+                        onclick="window.location.href = 'index.html';"
+                    >
+                        Back to Home
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
 
 <script>
+        var scene, camera, renderer, clock, deltaTime, totalTime;
+        var arToolkitSource, arToolkitContext;
+        var markerRoots = [];
+        var meshes = [];
+        var patternArray = [
+            "letterA",
+            "letterB",
+            "letterC",
+            "letterD",
+            "letterF",
+        ];
+        var foundPatterns = new Array(patternArray.length).fill(false);
 
-var scene, camera, renderer, clock, deltaTime, totalTime;
+        initialize();
+        animate();
 
-var arToolkitSource, arToolkitContext;
-
-initialize();
-animate();
-
-function initialize()
-{
-    scene = new THREE.Scene();
-
-    let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.5 );
-    scene.add( ambientLight );
-                
-    camera = new THREE.Camera();
-    scene.add(camera);
-
-    renderer = new THREE.WebGLRenderer({
-        antialias : true,
-        alpha: true
-    });
-    renderer.setClearColor(new THREE.Color('lightgrey'), 0)
-    renderer.setSize( 640, 480 );
-    renderer.domElement.style.position = 'absolute'
-    renderer.domElement.style.top = '0px'
-    renderer.domElement.style.left = '0px'
-    document.body.appendChild( renderer.domElement );
-
-    clock = new THREE.Clock();
-    deltaTime = 0;
-    totalTime = 0;
-    
-    //////////////////////////////////////////////////////////////
-    // setup arToolkitSource
-    //////////////////////////////////////////////////////////////
-
-    arToolkitSource = new THREEx.ArToolkitSource({
-        sourceType : 'webcam',
-    });
-
-    function onResize()
-    {
-        arToolkitSource.onResize()    
-        arToolkitSource.copySizeTo(renderer.domElement)    
-        if ( arToolkitContext.arController !== null )
+        function initialize()
         {
-            arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)    
-        }    
-    }
+            scene = new THREE.Scene();
 
-    arToolkitSource.init(function onReady(){
-        onResize()
-    });
-    
-    // handle resize event
-    window.addEventListener('resize', function(){
-        onResize()
-    });
-    
-    //////////////////////////////////////////////////////////////
-    // setup arToolkitContext
-    //////////////////////////////////////////////////////////////    
+            let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.5 );
+            scene.add( ambientLight );
+                        
+            camera = new THREE.Camera();
+            scene.add(camera);
 
-    // create atToolkitContext
-    arToolkitContext = new THREEx.ArToolkitContext({
-        cameraParametersUrl: 'data/camera_para.dat',
-        detectionMode: 'mono'
-    });
-    
-    // copy projection matrix to camera when initialization complete
-    arToolkitContext.init( function onCompleted(){
-        camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
-    });
+            renderer = new THREE.WebGLRenderer({
+                antialias : true,
+                alpha: true
+            });
+            renderer.setClearColor(new THREE.Color('lightgrey'), 0)
+            renderer.setSize( 640, 480 );
+            renderer.domElement.style.position = 'absolute'
+            renderer.domElement.style.top = '0px'
+            renderer.domElement.style.left = '0px'
+            document.body.appendChild( renderer.domElement );
 
-    //////////////////////////////////////////////////////////////
-    // setup markerRoots
-    //////////////////////////////////////////////////////////////
+            clock = new THREE.Clock();
+            deltaTime = 0;
+            totalTime = 0;
 
-    let loader = new THREE.TextureLoader();
-    let texture = loader.load( 'images/border.png' );
-        
-    let patternArray = ["letterA", "letterB", "letterC", "letterD", "letterF", "kanji", "hiro"];
-    let colorArray   = [0xff0000, 0xff8800, 0xffff00, 0x00cc00, 0x0000ff, 0xcc00ff, 0xcccccc];
-    for (let i = 0; i < patternArray.length; i++)
-    {
-        let markerRoot = new THREE.Group();
-        scene.add(markerRoot);
-        let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
-            type : 'pattern', patternUrl : "data/" + patternArray[i] + ".patt",
-        });
+            arToolkitSource = new THREEx.ArToolkitSource({
+                sourceType : 'webcam',
+            });
 
-        // Load models based on marker pattern
-        let modelPath = '';
-        switch(patternArray[i]) {
-            case 'letterA':
-                modelPath = 'laptop_complete';
-                break;
-            case 'letterB':
-                modelPath = 'battery';
-                break;
-            // Add more cases for additional markers and models
-            default:
-                // Default model path or behavior
-                break;
-        }
+            function onResize()
+            {
+                arToolkitSource.onResize()    
+                arToolkitSource.copySizeTo(renderer.domElement)    
+                if ( arToolkitContext.arController !== null )
+                {
+                    arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)    
+                }    
+            }
 
-        if (modelPath == 'laptop_complete') {
-            new THREE.MTLLoader()
-                .setPath( 'models/' )
-                .load( modelPath + '.mtl', function ( materials ) {
-                    materials.preload();
-                    new THREE.OBJLoader()
-                        .setMaterials( materials )
-                        .setPath( 'models/' )
-                        .load( modelPath + '.obj', function ( group ) {
-                            let customModel = group.children[0];
-                            customModel.material.side = THREE.DoubleSide;
-                            customModel.position.y = 0.25;
-                            customModel.scale.set(2,2,2);
-                            markerRoot.add(customModel);
-                        });
+            arToolkitSource.init(function onReady(){
+                onResize()
+            });
+            
+            window.addEventListener('resize', function(){
+                onResize()
+            });
+
+            arToolkitContext = new THREEx.ArToolkitContext({
+                cameraParametersUrl: 'data/camera_para.dat',
+                detectionMode: 'mono'
+            });
+            
+            arToolkitContext.init( function onCompleted(){
+                camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
+            });
+
+            let loader = new THREE.TextureLoader();
+            let texture = loader.load( 'images/border.png' );
+                
+            let patternArray = ["letterA", "letterB", "letterC", "letterD", "letterF", "kanji", "hiro"];
+            let colorArray   = [0xff0000, 0xff8800, 0xffff00, 0x00cc00, 0x0000ff, 0xcc00ff, 0xcccccc];
+            for (let i = 0; i < patternArray.length; i++)
+            {
+                let markerRoot = new THREE.Group();
+                scene.add(markerRoot);
+                let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
+                    type : 'pattern', patternUrl : "data/" + patternArray[i] + ".patt",
                 });
-        }
-        if (modelPath == 'battery') {
-            new THREE.MTLLoader()
-                .setPath( 'models/' )
-                .load( modelPath + '.mtl', function ( materials ) {
-                    materials.preload();
-                    new THREE.OBJLoader()
-                        .setMaterials( materials )
+
+                // Load models based on marker pattern
+                let modelPath = '';
+                switch(patternArray[i]) {
+                    case 'letterA':
+                        modelPath = 'laptop_complete';
+                        break;
+                    case 'letterB':
+                        modelPath = 'battery';
+                        break;
+                    // Add more cases for additional markers and models
+                    default:
+                        // Default model path or behavior
+                        break;
+                }
+
+                if (modelPath == 'laptop_complete') {
+                    new THREE.MTLLoader()
                         .setPath( 'models/' )
-                        .load( modelPath + '.obj', function ( group ) {
-                            let customModel = group.children[0];
-                            customModel.material.side = THREE.DoubleSide;
-                            customModel.position.y = 0.25;
-                            customModel.scale.set(0.5,0.5,0.5);
-                            markerRoot.add(customModel);
+                        .load( modelPath + '.mtl', function ( materials ) {
+                            materials.preload();
+                            new THREE.OBJLoader()
+                                .setMaterials( materials )
+                                .setPath( 'models/' )
+                                .load( modelPath + '.obj', function ( group ) {
+                                    let customModel = group.children[0];
+                                    customModel.material.side = THREE.DoubleSide;
+                                    customModel.position.y = 0.25;
+                                    customModel.scale.set(2,2,2);
+                                    markerRoot.add(customModel);
+                                });
                         });
-                });
+                }
+                if (modelPath == 'battery') {
+                    new THREE.MTLLoader()
+                        .setPath( 'models/' )
+                        .load( modelPath + '.mtl', function ( materials ) {
+                            materials.preload();
+                            new THREE.OBJLoader()
+                                .setMaterials( materials )
+                                .setPath( 'models/' )
+                                .load( modelPath + '.obj', function ( group ) {
+                                    let customModel = group.children[0];
+                                    customModel.material.side = THREE.DoubleSide;
+                                    customModel.position.y = 0.25;
+                                    customModel.scale.set(0.5,0.5,0.5);
+                                    markerRoot.add(customModel);
+                                });
+                        });
+                }
+            }
         }
-        
-        // let cube = new THREE.Mesh( 
-        //     new THREE.CubeGeometry(1.25,1.25,1.25), 
-        //     new THREE.MeshBasicMaterial({color:colorArray[i], map:texture, transparent:true, opacity:0.5}) 
-        // );
-        // cube.position.y = 1.25/2;
-        // markerRoot.add( cube );
-    }
-}
 
 
-function update()
-{
-    // update artoolkit on every frame
-    if ( arToolkitSource.ready !== false )
-        arToolkitContext.update( arToolkitSource.domElement );
-}
+        function update()
+        {
+            // update artoolkit on every frame
+            if ( arToolkitSource.ready !== false )
+                arToolkitContext.update( arToolkitSource.domElement );
+        }
 
 
-function render()
-{
-    renderer.render( scene, camera );
-}
+        function render()
+        {
+            renderer.render( scene, camera );
+        }
 
 
-function animate()
-{
-    requestAnimationFrame(animate);
-    deltaTime = clock.getDelta();
-    totalTime += deltaTime;
-    update();
-    render();
-}
+        function animate()
+        {
+            requestAnimationFrame(animate);
+            deltaTime = clock.getDelta();
+            totalTime += deltaTime;
+            update();
+            render();
+        }
 
-</script>
-
-</body>
+        </script>
+    </body> 
 </html>
