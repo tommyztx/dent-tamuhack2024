@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <head>
+	<meta charset="UTF-8">
 	<meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
 	<title>Hello, AR Cube!</title>
 	<!-- include three.js library -->
@@ -13,15 +14,23 @@
 	<script src="threex/threex-arbasecontrols.js"></script>
 	<script src="threex/threex-armarkercontrols.js"></script>
 	<script src="threex/threex-arsmoothedcontrols.js"></script>
+	<link rel="stylesheet" href="css/index.css" />
+	<link rel="preconnect" href="https://fonts.googleapis.com">
+	<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+	<link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
 </head>
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
-
-<!-- 
-  Example created by Lee Stemkoski: https://github.com/stemkoski
-  Based on the AR.js library and examples created by Jerome Etienne: https://github.com/jeromeetienne/AR.js/
--->
-
+	<div class="overlay-layout">
+		<div class="row">
+			<div class="col-12">
+				<div class="overlay-text">
+					<h1 class="overlay-title">The Moon</h1>
+					<p class="overlay-description">Find the kanji marker to peer into the moon! 🌙</p>
+				</div>
+			</div>
+		</div>
+	</div>
 <script>
 
 var scene, camera, renderer, clock, deltaTime, totalTime;
