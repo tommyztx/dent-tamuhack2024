@@ -36,6 +36,8 @@ animate();
 
 function initialize()
 {
+	var meshes = []; // Array to store all meshes
+
 	scene = new THREE.Scene();
 
 	let ambientLight = new THREE.AmbientLight( 0xcccccc, 0.5 );
@@ -122,19 +124,25 @@ function initialize()
 			new THREE.CubeGeometry(1.25,1.25,1.25),
 			new THREE.MeshBasicMaterial({color:colorArray[i], map:texture, transparent:true, opacity:0.5})
 		);
-		mesh.position.y = 1.25/2;
-		markerRoot.add( mesh );
+		mesh.position.y = 1.25 / 2;
+		markerRoot.add(mesh);
+		meshes.push(mesh);
 	}
 }
 
 
 function update()
 {
-	if ( markerRoot1.visible )
-		mesh1.rotation.y += 0.01;
-	// update artoolkit on every frame
-	if ( arToolkitSource.ready !== false )
-		arToolkitContext.update( arToolkitSource.domElement );
+	meshes.forEach(mesh => {
+        if (mesh.parent.visible) { // Check if the marker is visible
+            mesh.rotation.y += 0.01;
+        }
+    });
+
+    // Update artoolkit
+    if (arToolkitSource.ready !== false) {
+        arToolkitContext.update(arToolkitSource.domElement);
+    }
 }
 
 
