@@ -50,6 +50,12 @@ window.addEventListener("resize", function () {
     var width = container.clientWidth;
     var height = container.clientHeight;
     renderer.setSize(width, height);
+    if (width < 768) {
+        // If the screen width is less than 768px
+        camera.fov = 70; // Set a larger FOV
+    } else {
+        camera.fov = 60; // Set a smaller FOV
+    }
     camera.aspect = width / height;
     camera.updateProjectionMatrix();
 });
