@@ -133,16 +133,17 @@ function initialize()
 
 	new THREE.MTLLoader()
 		.setPath( 'models/' )
-		.load( 'laptop_complete.mtl', function ( materials ) {
+		.load( 'ssd2.mtl', function ( materials ) {
 			materials.preload();
 			new THREE.OBJLoader()
 				.setMaterials( materials )
 				.setPath( 'models/' )
-				.load( 'laptop_complete.obj', function ( group ) {
+				.load( 'ssd2.obj', function ( group ) {
 					mesh0 = group.children[0];
 					mesh0.material.side = THREE.DoubleSide;
 					mesh0.position.y = 0.25;
-					mesh0.scale.set(1,1,1);
+					mesh0.rotation.z = -Math.PI/2;
+					mesh0.scale.set(20,20,20);
 					markerRoot1.add(mesh0);
 				}, onProgress, onError );
 		});
