@@ -54,7 +54,7 @@
         // You can use JavaScript to fetch data from the server and update the HTML dynamically
 
         // Example URL for the server-side endpoint
-        const statsEndpoint = 'https://flask-db-9ykk.onrender.com';
+        const statsEndpoint = 'https://localhost:5000/stats';
 
         // Fetch data from the server
         fetch(statsEndpoint)
@@ -62,6 +62,7 @@
             .then(data => {
                 // Update the HTML with user stats
                 document.getElementById('userStats').innerHTML = `
+                    <p>User Name: ${data.username}<p>
                     <p>Challenges Completed: ${data.challengesCompleted}</p>
                     <p>Streak: ${data.streak}</p>
                     <p>Hours Played: ${data.hoursPlayed}</p>
