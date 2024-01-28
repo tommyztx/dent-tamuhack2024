@@ -36,7 +36,6 @@ animate();
 
 function initialize()
 {
-	var meshes = []; // Array to store all meshes
 
 	scene = new THREE.Scene();
 
@@ -108,7 +107,9 @@ function initialize()
 	////////////////////////////////////////////////////////////
 
 	let loader = new THREE.TextureLoader();
-	let texture = loader.load( 'images/mercury-sphere.jpg' );
+	let texture = loader.load( 'images/mercury-sphere.jpg', render );
+	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
+
 
 	let patternArray = ["letterA", "letterB", "letterC", "letterD", "letterF", "kanji", "hiro"];
 	let colorArray   = [0xff0000, 0xff8800, 0xffff00, 0x00cc00, 0x0000ff, 0xcc00ff, 0xcccccc];
@@ -121,28 +122,20 @@ function initialize()
 		});
 
 		let mesh = new THREE.Mesh(
-			new THREE.CubeGeometry(1.25,1.25,1.25),
+			new THREE.SphereBufferGeometry( 15, 32, 16 ),
 			new THREE.MeshBasicMaterial({color:colorArray[i], map:texture, transparent:true, opacity:0.5})
 		);
-		mesh.position.y = 1.25 / 2;
-		markerRoot.add(mesh);
-		meshes.push(mesh);
+		mesh.position.y = 1.25/2;
+		markerRoot.add( mesh );
 	}
 }
 
 
 function update()
 {
-	meshes.forEach(mesh => {
-        if (mesh.parent.visible) { // Check if the marker is visible
-            mesh.rotation.y += 0.01;
-        }
-    });
-
-    // Update artoolkit
-    if (arToolkitSource.ready !== false) {
-        arToolkitContext.update(arToolkitSource.domElement);
-    }
+	// update artoolkit on every frame
+	if ( arToolkitSource.ready !== false )
+		arToolkitContext.update( arToolkitSource.domElement );
 }
 
 
