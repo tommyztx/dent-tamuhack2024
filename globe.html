@@ -115,15 +115,15 @@ function initialize()
 	let geometry1 = new THREE.SphereGeometry(1, 32,32);
 
 	let loader = new THREE.TextureLoader();
-	let texture = loader.load( 'images/mercury-sphere.jpg', render );
-	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
-
+	let texture = loader.load( 'images/earth-sphere.jpg', render );
+	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: .8 } );
+	
 	mesh1 = new THREE.Mesh( geometry1, material1 );
 	mesh1.position.y = 1;
 
 	markerRoot1.add( mesh1 );
-
-	let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
+	
+	let pointLight = new THREE.PointLight( 0xffffff, 1, 200 );
 	pointLight.position.set(0.5,3,2);
 	// create a mesh to help visualize the position of the light
 	pointLight.add(
