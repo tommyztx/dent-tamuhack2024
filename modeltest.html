@@ -1,25 +1,65 @@
 <!doctype HTML>
 <html>
-<link rel="icon" href="data:;base64,iVBORw0KGgo=">
-<script src="js/aframe.min.js"></script>
-<script src="js/aframe-ar.js"></script>
+<head>
+    <link rel="icon" href="data:;base64,iVBORw0KGgo=">
+    <script src="js/aframe.min.js"></script>
+    <script src="js/aframe-ar.js"></script>
+</head>
 <body style="margin: 0px; overflow: hidden;">
 
 <a-scene embedded vr-mode-ui="enabled: false;" arjs="debugUIEnabled: false;">
 
     <a-assets>
-        <a-asset-item id="tree" src="models/tree.gltf"></a-asset-item>
-	</a-assets>
+        <a-asset-item id="realmoniitor" src="models/Monitor/realmoniitor.gltf"></a-asset-item>
+        <a-asset-item id="realssd" src="models/realssd.gltf"></a-asset-item> <!-- Add asset for modelA -->
+        <a-asset-item id="battery_final" src="models/Battery/battery_final.gltf"></a-asset-item>
+        <a-asset-item id="laptop_complete" src="models/Laptop/laptop_complete.gltf"></a-asset-item>
+        <a-asset-item id="motherboard" src="models/CPU/motherboard.gltf"></a-asset-item>
+    </a-assets>
     
-    <a-marker type="pattern" url="data/kanji.patt">
+    <a-marker type="pattern" url="data/letterB.patt">
         <a-entity   position="0 0 0" 
                     rotation="0 0 0"
-                    scale="0.10 0.10 0.10"
-                    gltf-model="#tree" >
+                    scale="1 1 1"
+                    gltf-model="#realmoniitor" >
+        </a-entity>
+    </a-marker>
+    
+    <a-marker type="pattern" url="data/letterA.patt"> <!-- Add marker for letterA -->
+        <a-entity   position="0 0 0" 
+                    rotation="0 0 0"
+                    scale="1 1 1"
+                    gltf-model="#realssd" > <!-- Use modelA for this marker -->
+        </a-entity>
+    </a-marker>
+
+    <a-marker type="pattern" url="data/letterC.patt"> 
+        <a-entity   position="0 0 0" 
+                    rotation="0 0 0"
+                    scale="1 1 1"
+                    gltf-model="#battery_final" > 
+        </a-entity>
+    </a-marker>
+
+    
+    <a-marker type="pattern" url="data/letterD.patt"> 
+        <a-entity   position="0 0 0" 
+                    rotation="0 0 0"
+                    scale="2 2 2"
+                    gltf-model="#laptop_complete" > 
+        </a-entity>
+    </a-marker>
+
+    <a-marker type="pattern" url="data/letterG.patt"> 
+        <a-entity   position="0 0 0" 
+                    rotation="0 0 0"
+                    scale="1 1 1"
+                    gltf-model="#motherboard" > 
         </a-entity>
     </a-marker>
     
     <a-entity camera></a-entity>
+
     
 </a-scene>
 </body>

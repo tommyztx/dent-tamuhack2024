@@ -33,10 +33,6 @@
 		</div>
 	</div>
 
-<!-- 
-  Example created by Lee Stemkoski: https://github.com/stemkoski
-  Based on the AR.js library and examples created by Jerome Etienne: https://github.com/jeromeetienne/AR.js/
--->
 
 <script>
 
@@ -142,16 +138,16 @@ function initialize()
 	
 	new THREE.MTLLoader()
 		.setPath( 'models/' )
-		.load( 'laptop_complete.mtl', function ( materials ) {
+		.load( 'realssd.mtl', function ( materials ) {
 			materials.preload();
 			new THREE.OBJLoader()
 				.setMaterials( materials )
 				.setPath( 'models/' )
-				.load( 'laptop_complete.obj', function ( group ) {
+				.load( 'realssd.obj', function ( group ) {
 					mesh0 = group.children[0];
 					mesh0.material.side = THREE.DoubleSide;
-					mesh0.position.y = 0.25;
-					mesh0.scale.set(1,1,1);
+					mesh0.position.y = 0.35;
+					mesh0.scale.set(0.25,0.25,0.25);
 					markerRoot1.add(mesh0);
 				}, onProgress, onError );
 		});
