@@ -121,3 +121,9 @@ p {
     animation: fadeIn 5s ease-out forwards;
     animation-delay: 900ms;
 }
+
+@media (max-width: 600px) {
+    .overlay-text {
+        width: 300px; /* Adjust this value to your preference */
+    }
+}
