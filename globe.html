@@ -16,7 +16,7 @@
 
 <body style='margin : 0px; overflow: hidden; font-family: Monospace;'>
 
-<!-- 
+<!--
   Example created by Lee Stemkoski: https://github.com/stemkoski
   Based on the AR.js library and examples created by Jerome Etienne: https://github.com/jeromeetienne/AR.js/
 -->
@@ -58,7 +58,7 @@ function initialize()
 	clock = new THREE.Clock();
 	deltaTime = 0;
 	totalTime = 0;
-	
+
 	////////////////////////////////////////////////////////////
 	// setup arToolkitSource
 	////////////////////////////////////////////////////////////
@@ -69,33 +69,33 @@ function initialize()
 
 	function onResize()
 	{
-		arToolkitSource.onResize()	
-		arToolkitSource.copySizeTo(renderer.domElement)	
+		arToolkitSource.onResize()
+		arToolkitSource.copySizeTo(renderer.domElement)
 		if ( arToolkitContext.arController !== null )
 		{
-			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)	
-		}	
+			arToolkitSource.copySizeTo(arToolkitContext.arController.canvas)
+		}
 	}
 
 	arToolkitSource.init(function onReady(){
 		onResize()
 	});
-	
+
 	// handle resize event
 	window.addEventListener('resize', function(){
 		onResize()
 	});
-	
+
 	////////////////////////////////////////////////////////////
 	// setup arToolkitContext
-	////////////////////////////////////////////////////////////	
+	////////////////////////////////////////////////////////////
 
 	// create atToolkitContext
 	arToolkitContext = new THREEx.ArToolkitContext({
 		cameraParametersUrl: 'data/camera_para.dat',
 		detectionMode: 'mono'
 	});
-	
+
 	// copy projection matrix to camera when initialization complete
 	arToolkitContext.init( function onCompleted(){
 		camera.projectionMatrix.copy( arToolkitContext.getProjectionMatrix() );
@@ -113,24 +113,24 @@ function initialize()
 	})
 
 	let geometry1 = new THREE.SphereGeometry(1, 32,32);
-	
+
 	let loader = new THREE.TextureLoader();
 	let texture = loader.load( 'images/mercury-sphere.jpg', render );
 	let material1 = new THREE.MeshLambertMaterial( { map: texture, opacity: 0.5 } );
-	
+
 	mesh1 = new THREE.Mesh( geometry1, material1 );
 	mesh1.position.y = 1;
-	
+
 	markerRoot1.add( mesh1 );
-	
+
 	let pointLight = new THREE.PointLight( 0xffffff, 1, 100 );
 	pointLight.position.set(0.5,3,2);
 	// create a mesh to help visualize the position of the light
-	pointLight.add( 
-		new THREE.Mesh( 
-			new THREE.SphereBufferGeometry( 0.05, 16,8 ), 
-			new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5 }) 
-		) 
+	pointLight.add(
+		new THREE.Mesh(
+			new THREE.SphereBufferGeometry( 0.05, 16,8 ),
+			new THREE.MeshBasicMaterial({ color: 0xffffff, opacity: 0.5 })
+		)
 	);
 	markerRoot1.add( pointLight );
 }
