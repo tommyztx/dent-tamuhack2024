@@ -7,7 +7,7 @@ loader.load(
     function (gltf) {
         gltf.scene.traverse(function (node) {
             if (node.isMesh) {
-                node.material.color = new THREE.Color(0xd3b0b0);
+                node.material.color = new THREE.Color(0xb49b9b);
             }
         });
         var bbox = new THREE.Box3().setFromObject(gltf.scene);
@@ -42,10 +42,6 @@ container.appendChild(renderer.domElement);
 var ambientLight = new THREE.AmbientLight(0xffffff, 0.5); // soft white light
 scene.add(ambientLight);
 
-// Add directional light
-var directionalLight = new THREE.DirectionalLight(0xffffff, 0.5);
-directionalLight.position.set(0, 1, 0); // set the position of the light
-scene.add(directionalLight);
 window.addEventListener("resize", function () {
     var width = container.clientWidth;
     var height = container.clientHeight;
@@ -65,7 +61,6 @@ window.dispatchEvent(new Event("resize"));
 var light = new THREE.DirectionalLight(0xffffff, 1);
 light.position.set(1, 1, 1).normalize();
 scene.add(light);
-console.log("hello");
 
 var clock = new THREE.Clock();
 

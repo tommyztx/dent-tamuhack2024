@@ -1,5 +1,5 @@
 body {
-    background-color: #f5f5f5;
+    /* background-color: #f5f5f5;
     background-image: linear-gradient(
         to bottom,
         rgba(255, 255, 255, 1),
@@ -7,9 +7,9 @@ body {
     );
     background-repeat: repeat;
     background-attachment: fixed;
-    background-position: top left;
+    background-position: top left; */
     margin: 2% 5% 0% 5%;
-    color: #333333;
+    color: white;
 }
 
 .homepageTitle,
@@ -66,7 +66,6 @@ p {
     font-family: "Bubblegum Sans", cursive;
     font-size: 1.2em;
     line-height: 1.6;
-    color: #333;
 }
 
 .navbar {
@@ -116,12 +115,6 @@ p {
     transition: margin-left 0.3s;
 }
 
-/* .card {
-    opacity: 0;
-    animation: fadeIn 5s ease-out forwards;
-    animation-delay: 900ms;
-} */
-
 @media (max-width: 600px) {
     .overlay-text {
         width: 300px;
@@ -148,9 +141,16 @@ p {
         height: 300px;
     }
 }
+.main {
+    opacity: 0;
+    animation: fadeIn 5s ease-out forwards;
+    animation-delay: 900ms;
+}
 
 .card {
     transition: transform 0.3s ease-in-out, box-shadow 0.3s ease-in-out;
+    border: 2px solid #854bad;
+    border-radius: 25px;
 }
 
 .card:hover {
@@ -162,4 +162,18 @@ p {
     width: 100%;
     height: 200px;
     object-fit: contain;
+}
+
+.card-body {
+    background-color: #854bad;
+    border-radius: 0 0 20px 20px;
+}
+
+.card-title a {
+    text-decoration: none;
+    color: white;
+}
+.card-title a:hover {
+    color: #c798c7;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
 }

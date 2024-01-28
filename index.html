@@ -15,6 +15,7 @@
             <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@300..700&family=Honk&display=swap" rel="stylesheet">
             <script src="https://cdn.jsdelivr.net/npm/three@0.138.3/build/three.min.js"></script>
             <script src="https://unpkg.com/three@0.138.3/examples/js/loaders/GLTFLoader.js"></script>
+        
         </head>
         <body> 
            
@@ -23,10 +24,10 @@
         </div>
         <div id="main" class="container text-center mb-5">
   
-            <p class="lead text-secondary">
+            <p class="lead">
                 Hey explorers! Ready for an adventure in Science, Technology, Engineering, and Math (STEM)? Let's dive into a world where magic happens through Augmented Reality (AR)!
             </p>
-            <p class="lead text-secondary mb-5">
+            <p class="lead mb-5">
                 Join the AR STEM Adventure Today! Unlock a world full of fun and learning. Who knows, you might be the next great scientist, tech guru, engineer, or math whiz! Ready to explore the magical world of STEM with AR? Let the adventure begin!
             </p>
             <div class="row">
@@ -96,5 +97,23 @@
                 </div>
          
             <script type="module" src="/main.js"></script>
+            <script src="https://cdn.jsdelivr.net/npm/vanta@latest/dist/vanta.dots.min.js"></script>
+            <script>
+                VANTA.DOTS({
+                  el: "html",
+                  mouseControls: true,
+                  touchControls: true,
+                  gyroControls: false,
+                  minHeight: 200.00,
+                  minWidth: 200.00,
+                  scale: 1.00,
+                  scaleMobile: 1.00,
+                  backgroundColor: 0xccb7ae,
+                  size: 5.20,
+                  color: 0x54414e,
+                  color2: 0x54414e,
+                  showLines: false,
+                })
+                </script>
     </body>
 </html>
