@@ -115,7 +115,7 @@ function initialize()
 		let markerRoot = new THREE.Group();
 		scene.add(markerRoot);
 		let markerControls = new THREEx.ArMarkerControls(arToolkitContext, markerRoot, {
-			type : 'pattern', patternUrl : "data/" + patternArray[6] + ".patt",
+			type : 'pattern', patternUrl : "data/" + patternArray[i] + ".patt",
 		});
 
 		let mesh = new THREE.Mesh(
