@@ -10,24 +10,27 @@ body {
     background-position: top left;
     margin: 2% 5% 0% 5%;
     color: #333333;
-    
 }
 
-h1 {
+.homepageTitle,
+.h1 {
     font-family: "Fredoka", sans-serif;
     font-optical-sizing: auto;
     font-weight: 300;
     font-style: normal;
     font-variation-settings: "wdth" 100;
     opacity: 0;
-    animation: fadeIn 3s ease-out forwards;
+}
+
+.homepageTitle {
     animation-delay: 400ms;
+    animation: fadeIn 3s ease-out forwards;
 }
 
 #main p {
     opacity: 0;
     animation: fadeIn 3s ease-out forwards;
-    animation-delay: 400ms; 
+    animation-delay: 400ms;
 }
 
 .overlay-text {
@@ -42,7 +45,7 @@ h1 {
 
 .overlay-title {
     color: white;
-    font-size: 1.3em;
+    font-size: 1.5em;
     font-weight: bold;
     margin-bottom: 10px;
 }
@@ -50,14 +53,6 @@ h1 {
 .overlay-description {
     color: white;
     font-size: 1.1em;
-}
-
-.increase-font,
-.decrease-font {
-    margin-top: 10px;
-    position: relative;
-    z-index: 1;
-    pointer-events: auto;
 }
 
 .overlay-layout {
@@ -125,4 +120,10 @@ p {
     opacity: 0;
     animation: fadeIn 5s ease-out forwards;
     animation-delay: 900ms;
+}
+
+@media (max-width: 600px) {
+    .overlay-text {
+        width: 300px; /* Adjust this value to your preference */
+    }
 }

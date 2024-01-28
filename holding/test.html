@@ -4,6 +4,7 @@
         <meta
             name="viewport"
             content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+            charset="UTF-8"
         />
         <title>Multi Globe Patterns</title>
         <!-- Include Bootstrap for styling -->
@@ -21,18 +22,142 @@
         <script src="../threex/threex-artoolkitcontext.js"></script>
         <script src="../threex/threex-arbasecontrols.js"></script>
         <script src="../threex/threex-armarkercontrols.js"></script>
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+        <style>
+            .list-group-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 16px;
+                color: #333;
+                background-color: #eef;
+                border: 1px solid #ddd;
+                margin-bottom: 5px;
+                padding: 10px;
+                border-radius: 5px;
+                font-family: 'Bubblegum Sans', cursive;
+            }
+
+            .list-group-item .status {
+                font-weight: bold;
+            }
+
+            .list-group-item .icon {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+            }
+
+            .found .status {
+                color: green;
+            }
+
+            .not-found .status {
+                color: red;
+            }
+
+            @media (max-width: 768px) {
+                .list-group-item {
+                    font-size: 11px;
+                }
+                .info-bubble {
+                    /* make the font way smaller */
+                    font-size: 10px;
+                }
+                .minimize-button {
+                    /* make the button smaller */
+                    padding: 5px;
+                    font-size: 10px;
+                }
+                .info-button {
+                    /* make the button smaller */
+                    padding: 5px;
+                    font-size: 10px;
+                }
+            }
+
+            .minimize-button {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                border: none;
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px;
+                border-radius: 50%;
+                cursor: pointer;
+                z-index: 1001; /* Above the checklist */
+            }
+
+            .minimized-checklist {
+                display: none;
+            }
+
+            .info-button {
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                background-color: #4CAF50;
+                color: white;
+                padding: 10px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 20px;
+                z-index: 1002;
+                /* transition: all 0.3s ease;
+                transform: scale(0);
+                opacity: 0; */
+
+            }
+
+            .info-bubble {
+                position: fixed;
+                bottom: 60px; /* Adjust as per the size of the button */
+                right: 10px;
+                background-color: white;
+                color: black;
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+                max-width: 300px;
+                display: none;
+                z-index: 1001;
+                font-family: 'Bubblegum Sans', cursive;
+            }
+            .info-bubble.show {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+
+        </style>
     </head>
     <body style="margin: 0px; overflow: hidden; font-family: Monospace">
         <!-- Checklist Overlay -->
-        <div
-            id="checklist"
-            class="position-fixed top-0 start-0 p-3"
-            style="opacity: 0.8"
-        >
+        <div id="checklist" class="position-fixed top-0 start-0 p-3" style="opacity: 0.75; background-color: #f0f0f0; border-radius: 10px;">
             <ul class="list-group" id="patternList">
                 <!-- Checklist items will be added here dynamically -->
             </ul>
         </div>
+
+        <!-- Minimize Button -->
+        <button id="minimizeButton" class="minimize-button">&horbar;</button>
+
+        <!-- Info Button and Text Bubble -->
+        <div id="infoButton" class="info-button">ℹ</div>
+        <div id="infoBubble" class="info-bubble">
+            <p>👋 Hey there, Space Explorer!</p>
+            <ul>
+                <li>🔍 Look for the black squares with letters. They're hiding in the stars!</li>
+                <li>🎉 When you find all the planets, it'll get checked off the list. Find them all to win!</li>
+            </ul>
+            <p>🌌 Happy exploring, and may the stars guide your way! 🌠</p>
+            <!-- make toggle for creative mode -->
+            <p>🎨 Creative Mode: <input type="checkbox" id="creativeMode" name="creativeMode" value="creativeMode"></p>
+        </div>
+
 
         <!-- Popup for 3D Model -->
         <div class="modal" tabindex="-1" role="dialog" id="modelPopup">
@@ -50,7 +175,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <p>All patterns found! Here is your 3D model:</p>
+                        <p>All Planets Found! You Collected:</p>
                         <!-- 3D Model will be displayed here -->
                         <!-- <div id="modelContainer"></div> -->
                         <!-- embed a gif -->
@@ -59,21 +184,25 @@
                             alt="3D Model"
                             width="100%"
                         />
-                        <!-- add a button to reload thats (play again?) -->
-                        <button
-                            type="button"
-                            class="btn btn-primary"
-                            onclick="window.location.reload();"
-                        >
-                            Play Again
-                        </button>
-                        <!-- add button to navigate back to home page -->
-                        <button
-                            type="button"
-                            class="btn btn-secondary"
-                            onclick="window.location.href = 'index.html';"
-                        >
-                            Back to Home
+                        <div style="display: flex; justify-content: center; padding: 10px;">
+                            <!-- add a button to reload (play again?) -->
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="window.location.reload();"
+                                style="margin-right: 10px;"
+                            >
+                                Play Again
+                            </button>
+                            <!-- add button to navigate back to home page -->
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                onclick="window.location.href = '../index.html';"
+                            >
+                                Home
+                            </button>
+                        </div>
                         </button>
                     </div>
                 </div>
@@ -93,6 +222,14 @@
                 "letterF",
                 "letterG",
             ];
+            let patternNameMapping = {
+                "letterA": "Mercury",
+                "letterB": "Venus",
+                "letterC": "Earth",
+                "letterD": "Mars",
+                "letterF": "Jupiter",
+                "letterG": "Saturn"
+            };
             var foundPatterns = new Array(patternArray.length).fill(false);
 
             initialize();
@@ -112,7 +249,8 @@
                     alpha: true,
                 });
                 renderer.setClearColor(new THREE.Color("lightgrey"), 0);
-                renderer.setSize(640, 480);
+                // renderer.setSize(640, 480);
+                renderer.setSize(window.innerWidth, window.innerHeight - 50);
                 renderer.domElement.style.position = "absolute";
                 renderer.domElement.style.top = "0px";
                 renderer.domElement.style.left = "0px";
@@ -216,13 +354,14 @@
                     arToolkitContext.update(arToolkitSource.domElement);
                 checkCompletion();
             }
-
             function initializeChecklist() {
                 let patternList = document.getElementById("patternList");
                 patternArray.forEach(function (pattern, index) {
+                    let displayName = patternNameMapping[pattern] || pattern;
+
                     let listItem = document.createElement("li");
-                    listItem.className = "list-group-item";
-                    listItem.textContent = pattern + ": Not Found";
+                    listItem.className = "list-group-item not-found";
+                    listItem.innerHTML = `<span>${displayName}</span> <span class="status" style="margin-left: 10px;">❌</span>`;
                     listItem.id = "pattern-" + index;
                     patternList.appendChild(listItem);
                 });
@@ -233,8 +372,10 @@
                 for (let i = 0; i < markerRoots.length; i++) {
                     if (markerRoots[i].visible && !foundPatterns[i]) {
                         foundPatterns[i] = true;
-                        document.getElementById("pattern-" + i).textContent =
-                            patternArray[i] + ": Found";
+                        let listItem = document.getElementById("pattern-" + i);
+                        let displayName = patternNameMapping[patternArray[i]] || patternArray[i];
+                        listItem.className = "list-group-item found";
+                        listItem.innerHTML = `<span>${displayName}</span> <span class="status" style="margin-left: 10px;">✔</span>`;
                     }
                     if (!foundPatterns[i]) {
                         allFound = false;
@@ -243,12 +384,11 @@
 
                 // If all patterns are found, display the popup with 3D model
                 if (allFound) {
-                    // Show popup
                     $("#modelPopup").modal("show");
-                    // Load and display 3D model
                     load3DModel();
                 }
             }
+
 
             function load3DModel() {
                 new THREE.MTLLoader().load(
@@ -284,9 +424,39 @@
                 update();
                 render();
             }
+
+            document.addEventListener("DOMContentLoaded", function() {
+                var checklist = document.getElementById("checklist");
+                var minimizeButton = document.getElementById("minimizeButton");
+                
+
+                minimizeButton.onclick = function() {
+                    if (checklist.classList.contains("minimized-checklist")) {
+                        checklist.classList.remove("minimized-checklist");
+                        minimizeButton.innerHTML = "⬆";
+                    } else {
+                        checklist.classList.add("minimized-checklist");
+                        minimizeButton.innerHTML = "⬇";
+                    }
+                };
+                var infoButton = document.getElementById("infoButton");
+                var infoBubble = document.getElementById("infoBubble");
+                
+                infoButton.onclick = function() {
+                    infoBubble.classList.toggle("show");
+                    if (infoBubble.style.display === "none") {
+                        infoBubble.style.display = "block";
+                    } else {
+                        infoBubble.style.display = "none";
+                    }
+                };
+
+            });
+
         </script>
-        <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js"></script>
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.7/umd/popper.min.js"></script>
-        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/js/bootstrap.min.js"></script>
+        <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
     </body>
 </html>
