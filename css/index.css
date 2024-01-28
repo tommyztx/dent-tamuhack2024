@@ -22,24 +22,41 @@ h1 {
 }
 
 .overlay-text {
-    position: absolute;
-    top: 10px;
-    left: 10px;
+    position: relative;
+    /* top: 40px; */
+    /* left: 10px; */
+    margin-top: 10px;
     background-color: rgba(0, 0, 0, 0.5);
     padding: 8px;
     border-radius: 8px;
-    width: 300px;
+    width: 400px;
     word-wrap: break-word;
 }
 
 .overlay-title {
     color: white;
-    font-size: 1.5em;
+    font-size: 1.3em;
     font-weight: bold;
     margin-bottom: 10px;
 }
 
 .overlay-description {
     color: white;
-    font-size: 1.2em;
+    font-size: 1.1em;
+}
+
+.increase-font,
+.decrease-font {
+    margin-top: 10px;
+    position: relative;
+    z-index: 1;
+    pointer-events: auto;
+    /* top: 10px; */
+}
+
+.overlay-layout {
+    width: 100%;
+    padding-right: 15px;
+    padding-left: 15px;
+    margin-right: auto;
 }
