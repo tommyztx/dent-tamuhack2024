@@ -131,7 +131,7 @@ function initialize()
                 break;
         }
 
-        if (modelPath !== '') {
+        if (modelPath == 'laptop_complete') {
             new THREE.MTLLoader()
                 .setPath( 'models/' )
                 .load( modelPath + '.mtl', function ( materials ) {
@@ -143,18 +143,35 @@ function initialize()
                             let customModel = group.children[0];
                             customModel.material.side = THREE.DoubleSide;
                             customModel.position.y = 0.25;
-                            customModel.scale.set(1,1,1);
+                            customModel.scale.set(2,2,2);
+                            markerRoot.add(customModel);
+                        });
+                });
+        }
+        if (modelPath == 'battery') {
+            new THREE.MTLLoader()
+                .setPath( 'models/' )
+                .load( modelPath + '.mtl', function ( materials ) {
+                    materials.preload();
+                    new THREE.OBJLoader()
+                        .setMaterials( materials )
+                        .setPath( 'models/' )
+                        .load( modelPath + '.obj', function ( group ) {
+                            let customModel = group.children[0];
+                            customModel.material.side = THREE.DoubleSide;
+                            customModel.position.y = 0.25;
+                            customModel.scale.set(0.5,0.5,0.5);
                             markerRoot.add(customModel);
                         });
                 });
         }
         
-        let cube = new THREE.Mesh( 
-            new THREE.CubeGeometry(1.25,1.25,1.25), 
-            new THREE.MeshBasicMaterial({color:colorArray[i], map:texture, transparent:true, opacity:0.5}) 
-        );
-        cube.position.y = 1.25/2;
-        markerRoot.add( cube );
+        // let cube = new THREE.Mesh( 
+        //     new THREE.CubeGeometry(1.25,1.25,1.25), 
+        //     new THREE.MeshBasicMaterial({color:colorArray[i], map:texture, transparent:true, opacity:0.5}) 
+        // );
+        // cube.position.y = 1.25/2;
+        // markerRoot.add( cube );
     }
 }
 
