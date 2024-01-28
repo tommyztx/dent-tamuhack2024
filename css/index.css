@@ -10,6 +10,7 @@ body {
     background-position: top left;
     margin: 2% 5% 0% 5%;
     color: #333333;
+    
 }
 
 h1 {
@@ -18,6 +19,15 @@ h1 {
     font-weight: 300;
     font-style: normal;
     font-variation-settings: "wdth" 100;
+    opacity: 0;
+    animation: fadeIn 3s ease-out forwards;
+    animation-delay: 400ms;
+}
+
+#main p {
+    opacity: 0;
+    animation: fadeIn 3s ease-out forwards;
+    animation-delay: 400ms; 
 }
 
 .overlay-text {
@@ -62,4 +72,57 @@ p {
     font-size: 1.2em;
     line-height: 1.6;
     color: #333;
+}
+
+.navbar {
+    background-color: #222 !important;
+    padding: 5;
+    position: fixed;
+    width: 90%;
+    z-index: 5000;
+    transition: width 0.3s;
+}
+
+.navbar-dark .navbar-toggler-icon {
+    background-color: white;
+}
+
+.navbar-dark .navbar-toggler:focus,
+.navbar-dark .navbar-toggler:active {
+    outline: none;
+}
+
+.navbar-dark .navbar-nav .nav-link {
+    color: #ebe8e8;
+    opacity: 0;
+    animation: fadeIn 3s ease-out forwards;
+}
+
+.navbar-dark .navbar-nav .nav-link:hover,
+.navbar-dark .navbar-nav .nav-link:active {
+    color: #d35e5e;
+}
+
+.navbar-dark .navbar-nav .active {
+    background-color: #d35e5e;
+}
+
+@keyframes fadeIn {
+    from {
+        opacity: 0;
+    }
+    to {
+        opacity: 1;
+    }
+}
+
+#main {
+    padding-top: 60;
+    transition: margin-left 0.3s;
+}
+
+.card {
+    opacity: 0;
+    animation: fadeIn 5s ease-out forwards;
+    animation-delay: 900ms;
 }
