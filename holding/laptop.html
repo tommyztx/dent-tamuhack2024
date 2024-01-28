@@ -313,9 +313,12 @@
                 function checkCompletion() {
                     let allFound = foundPatterns.every(val => val);
                     if (allFound && !isModalOpen) {
-                        $("#modelPopup").modal("show");
-                        isModalOpen = true;
+                        setTimeout(showPopup, 3000);
                     }
+                }
+                function showPopup() {
+                    $("#modelPopup").modal("show");
+                    isModalOpen = true;
                 }
 
                 // Minimize and Info button logic

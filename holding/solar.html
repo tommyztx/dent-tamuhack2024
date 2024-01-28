@@ -386,34 +386,38 @@
 
                 // If all patterns are found, display the popup with 3D model
                 if (allFound) {
-                    $("#modelPopup").modal("show");
-                    load3DModel();
+                    // wait for 3 seconds before showing the popup
+                    setTimeout(showPopup, 3000);
+                    // $("#modelPopup").modal("show");
+                    // load3DModel();
                 }
             }
 
-
-            function load3DModel() {
-                new THREE.MTLLoader().load(
-                    "../models/fish-2.mtl",
-                    function (materials) {
-                        materials.preload();
-                        new THREE.OBJLoader().setMaterials(materials).load(
-                            "../models/fish-2.obj",
-                            function (object) {
-                                object.position.y = 0;
-                                object.position.x = 0;
-                                object.position.z = 0;
-                                object.scale.set(0.1, 0.1, 0.1);
-                                document
-                                    .getElementById("modelContainer")
-                                    .appendChild(object);
-                            },
-                            function () {},
-                            function () {}
-                        );
-                    }
-                );
+            function showPopup() {
+                $("#modelPopup").modal("show");
             }
+            // function load3DModel() {
+            //     new THREE.MTLLoader().load(
+            //         "../models/fish-2.mtl",
+            //         function (materials) {
+            //             materials.preload();
+            //             new THREE.OBJLoader().setMaterials(materials).load(
+            //                 "../models/fish-2.obj",
+            //                 function (object) {
+            //                     object.position.y = 0;
+            //                     object.position.x = 0;
+            //                     object.position.z = 0;
+            //                     object.scale.set(0.1, 0.1, 0.1);
+            //                     document
+            //                         .getElementById("modelContainer")
+            //                         .appendChild(object);
+            //                 },
+            //                 function () {},
+            //                 function () {}
+            //             );
+            //         }
+            //     );
+            // }
 
             function render() {
                 renderer.render(scene, camera);
