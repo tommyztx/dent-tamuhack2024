@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta
+            name="viewport"
+            content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0"
+            charset="UTF-8"
+        />
+        <title>Parts of Laptop</title>
+        <!-- Include Bootstrap for styling -->
+        <link
+            href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+            rel="stylesheet"
+        />
+        <link rel="preconnect" href="https://fonts.googleapis.com">
+        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+        <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+        <script src="https://cdnjs.cloudflare.com/ajax/libs/lottie-web/5.7.6/lottie.min.js"></script>
+        <script src="../js/aframe.min.js"></script>
+        <script src="../js/aframe-ar.js"></script>
+        <style>
+            .list-group-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                font-size: 16px;
+                color: #333;
+                background-color: #eef;
+                border: 1px solid #ddd;
+                margin-bottom: 5px;
+                padding: 10px;
+                border-radius: 5px;
+                font-family: 'Bubblegum Sans', cursive;
+            }
+
+            .list-group-item .status {
+                font-weight: bold;
+            }
+
+            .list-group-item .icon {
+                width: 24px;
+                height: 24px;
+                margin-right: 10px;
+            }
+
+            .found .status {
+                color: green;
+            }
+
+            .not-found .status {
+                color: red;
+            }
+
+            @media (max-width: 768px) {
+                .list-group-item {
+                    font-size: 11px;
+                }
+                .info-bubble {
+                    /* make the font way smaller */
+                    font-size: 10px;
+                }
+                .minimize-button {
+                    /* make the button smaller */
+                    padding: 5px;
+                    font-size: 10px;
+                }
+                .info-button {
+                    /* make the button smaller */
+                    padding: 5px;
+                    font-size: 10px;
+                }
+            }
+
+            .minimize-button {
+                position: fixed;
+                top: 10px;
+                right: 10px;
+                border: none;
+                background-color: #6C63FF;
+                color: white;
+                padding: 10px;
+                border-radius: 50%;
+                cursor: pointer;
+                z-index: 1001; /* Above the checklist */
+            }
+
+            .minimized-checklist {
+                display: none;
+            }
+
+            .info-button {
+                position: fixed;
+                bottom: 10px;
+                right: 10px;
+                background-color: #6C63FF;
+                color: white;
+                padding: 10px;
+                border-radius: 50%;
+                cursor: pointer;
+                font-size: 20px;
+                z-index: 1002;
+                /* transition: all 0.3s ease;
+                transform: scale(0);
+                opacity: 0; */
+
+            }
+
+            .info-bubble {
+                position: fixed;
+                bottom: 60px; /* Adjust as per the size of the button */
+                right: 10px;
+                background-color: white;
+                color: black;
+                padding: 10px;
+                border-radius: 10px;
+                box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.3);
+                max-width: 300px;
+                display: none;
+                z-index: 1001;
+                font-family: 'Bubblegum Sans', cursive;
+            }
+            .info-bubble.show {
+                transform: scale(1);
+                opacity: 1;
+            }
+
+        </style>
+    </head>
+    <body style="margin: 0px; overflow: hidden; font-family: Monospace">
+        <!-- Checklist Overlay -->
+        <div id="checklist" class="position-fixed top-0 start-0 p-3" style="opacity: 0.75; background-color: #f0f0f0; border-radius: 10px;">
+            <ul class="list-group" id="patternList">
+                <!-- Checklist items will be added here dynamically -->
+            </ul>
+        </div>
+
+        <!-- Minimize Button -->
+        <button id="minimizeButton" class="minimize-button">&horbar;</button>
+
+        <!-- Info Button and Text Bubble -->
+        <div id="infoButton" class="info-button">ℹ</div>
+        <div id="infoBubble" class="info-bubble">
+            <p>👋 Hey there, Tech Lover!</p>
+            <ul>
+                <li>🔍 Look for the black squares with letters. They're hiding in the bits!</li>
+                <li>🎉 When you find all the parts, it'll get checked off the list. Find them all to win!</li>
+            </ul>
+            <p>💻 Happy exploring, and may the wires guide your way! 🤖</p>
+            <!-- make toggle for creative mode -->
+            <p>🎨 Creative Mode: <input type="checkbox" id="creativeMode" name="creativeMode" value="creativeMode"></p>
+        </div>
+
+
+        <!-- Popup for 3D Model -->
+        <div class="modal" tabindex="-1" role="dialog" id="modelPopup">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title">Congratulations!</h5>
+                        <button
+                            type="button"
+                            class="close"
+                            data-dismiss="modal"
+                            aria-label="Close"
+                        >
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>All Parts Found! Imagine a magical box that can take you on exciting adventures to distant lands, help you build your own games, or even chat with astronauts in space! That's what a laptop is - a doorway to a world where you can learn and play at the same time. You can use it to draw colorful pictures, solve fun puzzles that teach you math, and watch fascinating videos about the stars and planets!:</p>
+                        <div style="display: flex; justify-content: center; align-items: center; height: 100vh;">
+                            <div id="lottie-animation" style="width: 50%; height: 50%;"></div>
+                        </div>
+                        <div style="display: flex; justify-content: center; padding: 10px;">
+                            <!-- add a button to reload (play again?) -->
+                            <button
+                                type="button"
+                                class="btn btn-primary"
+                                onclick="window.location.reload();"
+                                style="margin-right: 10px;"
+                            >
+                                Play Again
+                            </button>
+                            <!-- add button to navigate back to home page -->
+                            <button
+                                type="button"
+                                class="btn btn-secondary"
+                                onclick="window.location.href = '../index.html';"
+                            >
+                                Home
+                            </button>
+                        </div>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- A-Frame AR Scene -->
+        <a-scene embedded vr-mode-ui="enabled: false;" arjs="debugUIEnabled: false;">
+            <a-assets>
+                <a-asset-item id="realmoniitor" src="../models/Monitor/realmoniitor.gltf"></a-asset-item>
+                <a-asset-item id="realssd" src="../models/realssd.gltf"></a-asset-item> <!-- Add asset for modelA -->
+                <a-asset-item id="battery_final" src="../models/Battery/battery_final.gltf"></a-asset-item>
+                <a-asset-item id="laptop_complete" src="../models/Laptop/laptop_complete.gltf"></a-asset-item>
+                <a-asset-item id="motherboard" src="../models/CPU/motherboard.gltf"></a-asset-item>
+            </a-assets>
+
+            <a-marker type="pattern" url="../data/letterB.patt">
+                <a-entity   position="0 0 0" 
+                            rotation="0 0 0"
+                            scale="1 1 1"
+                            gltf-model="#realmoniitor" >
+                </a-entity>
+            </a-marker>
+            
+            <a-marker type="pattern" url="../data/letterA.patt"> <!-- Add marker for letterA -->
+                <a-entity   position="0 0 0" 
+                            rotation="0 0 0"
+                            scale="1 1 1"
+                            gltf-model="#realssd" > <!-- Use modelA for this marker -->
+                </a-entity>
+            </a-marker>
+        
+            <a-marker type="pattern" url="../data/letterC.patt"> 
+                <a-entity   position="0 0 0" 
+                            rotation="0 0 0"
+                            scale="1 1 1"
+                            gltf-model="#battery_final" > 
+                </a-entity>
+            </a-marker>
+        
+            
+            <a-marker type="pattern" url="../data/letterD.patt"> 
+                <a-entity   position="0 0 0" 
+                            rotation="0 0 0"
+                            scale="2 2 2"
+                            gltf-model="#laptop_complete" > 
+                </a-entity>
+            </a-marker>
+        
+            <a-marker type="pattern" url="../data/letterG.patt"> 
+                <a-entity   position="0 0 0" 
+                            rotation="0 0 0"
+                            scale="1 1 1"
+                            gltf-model="#motherboard" > 
+                </a-entity>
+            </a-marker>
+            
+            <a-entity camera></a-entity>
+        </a-scene>
+
+        <!-- jQuery, Popper.js, Bootstrap JS -->
+        <script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.9.1/dist/umd/popper.min.js"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+
+        <!-- Custom JavaScript for interaction logic -->
+        <script>
+            var isModalOpen = false;
+            document.addEventListener('DOMContentLoaded', function() {
+                var patternArray = ['letterA', 'letterB', 'letterC', 'letterD', 'letterG'];
+                // TODO map of pattern name to marker
+                var componentNames = ['SSD', 'Monitor', 'Battery', 'Laptop', 'Motherboard'];
+
+                var foundPatterns = new Array(patternArray.length).fill(false);
+                var markers = {};
+
+                // Initialize checklist
+                initializeChecklist();
+
+                // Initialize markers
+                patternArray.forEach(function(pattern, index) {
+                    markers[pattern] = document.querySelector(`a-marker[url="../data/${pattern}.patt"]`);
+                });
+
+                // Check for marker visibility
+                setInterval(function() {
+                    patternArray.forEach(function(pattern, index) {
+                        if (markers[pattern].object3D.visible === true && !foundPatterns[index]) {
+                            foundPatterns[index] = true;
+                            updateChecklist(index);
+                        }
+                    });
+
+                    checkCompletion();
+                }, 500);
+
+                $("#modelPopup").on('hidden.bs.modal', function () {
+                    isModalOpen = false;
+                });
+
+                function initializeChecklist() {
+                    let patternList = document.getElementById("patternList");
+                    patternArray.forEach(function (pattern, index) {
+                        let listItem = document.createElement("li");
+                        let componentName = componentNames[index];
+                        listItem.className = "list-group-item not-found";
+                        listItem.innerHTML = `<span>${componentName}</span> <span class="status" style="margin-left: 10px;">❌</span>`;
+                        listItem.id = "pattern-" + index;
+                        patternList.appendChild(listItem);
+                    });
+                }
+
+                function updateChecklist(index) {
+                    let listItem = document.getElementById("pattern-" + index);
+                    let componentName = componentNames[index];
+                    listItem.className = "list-group-item found";
+                    listItem.innerHTML = `<span>${componentName}</span> <span class="status" style="margin-left: 10px;">✔</span>`;
+                }
+
+                function checkCompletion() {
+                    let allFound = foundPatterns.every(val => val);
+                    if (allFound && !isModalOpen) {
+                        $("#modelPopup").modal("show");
+                        isModalOpen = true;
+                    }
+                }
+
+                // Minimize and Info button logic
+                var minimizeButton = document.getElementById("minimizeButton");
+                var checklist = document.getElementById("checklist");
+
+                minimizeButton.onclick = function() {
+                    if (checklist.classList.contains("minimized-checklist")) {
+                        checklist.classList.remove("minimized-checklist");
+                        minimizeButton.innerHTML = "&horbar;";
+                    } else {
+                        checklist.classList.add("minimized-checklist");
+                        minimizeButton.innerHTML = "&uarr;";
+                    }
+                };
+
+                var infoButton = document.getElementById("infoButton");
+                var infoBubble = document.getElementById("infoBubble");
+                
+                infoButton.onclick = function() {
+                    infoBubble.classList.toggle("show");
+                    if (infoBubble.style.display === "none") {
+                        infoBubble.style.display = "block";
+                    } else {
+                        infoBubble.style.display = "none";
+                    }
+                };
+            });
+        </script>
+        <script>
+            var scene = document.querySelector('a-scene');
+            window.addEventListener('resize', function () {
+                scene.style.width = window.innerWidth + 'px';
+                scene.style.height = window.innerHeight + 'px';
+                scene.components.renderer.setSize(window.innerWidth, window.innerHeight);
+            });
+            var animation = bodymovin.loadAnimation({
+                container: document.getElementById('lottie-animation'), // the dom element that will contain the animation
+                renderer: 'svg',
+                loop: true,
+                autoplay: true,
+                path: '../images/laptop.json' // the path to the animation json
+            });
+        </script>
+    </body>
+</html>

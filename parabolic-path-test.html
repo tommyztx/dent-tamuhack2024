@@ -1,0 +1,93 @@
+<!doctype HTML>
+<html>
+<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+<head>
+    <meta name="viewport" content="width=device-width, user-scalable=no, minimum-scale=1.0, maximum-scale=1.0">
+    <title>Parabolic GLTF Animation</title>
+    <script src="js/aframe.min.js"></script>
+    <script src="js/aframe-ar.js"></script>
+</head>
+<body style="margin: 0px; overflow: hidden;">
+
+<a-scene embedded vr-mode-ui="enabled: false;" arjs="debugUIEnabled: false;">
+    
+    <a-assets>
+        <a-asset-item id="model-gltf" src="models/spaceship.gltf"></a-asset-item>
+    </a-assets>
+
+    <a-marker type="pattern" url="data/markerA.patt">
+        <a-entity id="markerA"></a-entity>
+    </a-marker>
+
+    <a-marker type="pattern" url="data/markerB.patt">
+        <a-entity id="markerB"></a-entity>
+    </a-marker>
+
+    <a-entity gltf-model="#model-gltf" 
+             animation="property: position; to: 5 5 -5; dur: 2000; easing: easeInOutQuad; loop: true" 
+             position="0 0 0" 
+             scale="0.1 0.1 0.1" 
+             shadow></a-entity>
+
+    <a-entity camera></a-entity>
+
+</a-scene>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const markerA = document.querySelector('#markerA');
+        const markerB = document.querySelector('#markerB');
+        const model = document.querySelector('[gltf-model]');
+
+        model.addEventListener('loaded', () => {
+            const markerA = document.querySelector('#markerA');
+            const markerB = document.querySelector('#markerB');
+            
+            function calculateParabolicPath(pointA, pointB, height, steps) {
+                let path = [];
+                for (let i = 0; i <= steps; i++) {
+                    let t = i / steps;
+                    let x = pointA.x + (pointB.x - pointA.x) * t;
+                    let z = pointA.z + (pointB.z - pointA.z) * t;
+                    let parabola = -4 * height * t * (t - 1);
+                    let y = pointA.y + (pointB.y - pointA.y) * t + parabola;
+                    path.push({x, y, z});
+                }
+                return path;
+            }
+
+            function animateModelOnPath(path, duration) {
+                let startTime = Date.now();
+                function animate() {
+                    let currentTime = Date.now();
+                    let timeElapsed = currentTime - startTime;
+                    let t = timeElapsed / duration;
+
+                    if (t > 1) {
+                        t = 1; // clamp the value to prevent overrunning the end of the path
+                    }
+
+                    let position = path[Math.floor(t * (path.length - 1))];
+                    model.setAttribute('position', position);
+
+                    if (t < 1) {
+                        requestAnimationFrame(animate);
+                    }
+                }
+                requestAnimationFrame(animate);
+            }
+
+            let animationLoop = setInterval(() => {
+                if (markerA.object3D.visible && markerB.object3D.visible) {
+                    clearInterval(animationLoop);
+                    let path = calculateParabolicPath(markerA.object3D.position, markerB.object3D.position, 5, 100);
+                    animateModelOnPath(path, 2000);
+                }
+            }, 100);
+        });
+
+    });
+</script>
+
+</body>
+</html>
